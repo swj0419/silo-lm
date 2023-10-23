@@ -274,7 +274,10 @@ class EvaluatingWrapper():
                     label2LM_prob, label2knn_prob = self.eval_one_ex(input_text, knn_input_text, knn_temp, knn_only=False) 
                     
                     final_prob_pmi = np.log(label2LM_prob+1e-10) - np.log(domain_label2LM_prob+1e-10)
-                    label2prob_pmi = self.vocab2label(final_prob_pmi, self.label2word_id)
+                    if self.args.lm_fuzzy_verbalizer:
+                        label2prob_pmi = self.vocab2label(final_prob_pmi, self.label2synonym_id)
+                    else:
+                        label2prob_pmi = self.vocab2label(final_prob_pmi, self.label2word_id)
                     pred_parametric = torch.argmax(label2prob_pmi).item()
                     all_pred_parametric.append(pred_parametric)
 

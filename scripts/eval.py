@@ -19,7 +19,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logger = logging.getLogger(__name__)
 
 domain2idx = {"Github": 19, "NIH_ExPorter": 1, "Wikipedia_(en)": 19, "cc-news": 7, "Books3": 19, "new-amazon": 19, "MIMIC_III": 10, "imdb": 1}
-# domain2index = {"imdb": "imdb-1024-512.index", "Github": "Github-1024-512-[0K-2000K].index", "NIH_ExPorter": "NIH_ExPorter-1024-512-[0K-200K].index", "Wikipedia_(en)": "Wikipedia_(en)-1024-512-[0K-2000K].index", "cc-news": "cc-news-1024-512-[0K-800K].index", "Books3": "Books3-1024-512-[0K-2000K].index", "new-amazon": "new-amazon-1024-512-[0K-2000K].index", "MIMIC_III": "MIMIC_III-1024-512-[0K-1000K].index"}
+domain2index_name = {"imdb": "imdb-1024-512.index", "Github": "Github-1024-512-[0K-2000K].index", "NIH_ExPorter": "NIH_ExPorter-1024-512-[0K-200K].index", "Wikipedia_(en)": "Wikipedia_(en)-1024-512-[0K-2000K].index", "cc-news": "cc-news-1024-512-[0K-800K].index", "Books3": "Books3-1024-512-[0K-2000K].index", "new-amazon": "new-amazon-1024-512-[0K-2000K].index", "MIMIC_III": "MIMIC_III-1024-512-[0K-1000K].index"}
 
 class Args:
     def __init__(self, dictionary):
@@ -113,7 +113,9 @@ if __name__ == '__main__':
 
         index_path = os.path.join(args.output_dir, "{}-{}.index".format(args_knn.subset, postfix + s_postfix_index))
         DIMENSION = 2048
-        index_path = args.index_path # domain2index[subset]
+        if args.index_path is not None:
+            index_path = os.path.join(args.index_path, domain2index_name[args.raw_file])
+            print(f"Loading index from {index_path}")
 
         dstore_targets = get_flatten_targets(tokenized_path, split=args_knn.split, args=args_knn)
         dstore_size = len(dstore_targets)
